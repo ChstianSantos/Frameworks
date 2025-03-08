@@ -1,9 +1,10 @@
 class User:
     # Simulação de um banco de dados
     users = [
-        {"id": 1, "name": "Alice", "email": "alice@example.com"},
-        {"id": 2, "name": "Bob", "email": "bob@example.com"}
-    ]
+        
+        {"id": 1, "name": "Merc1", "cnpj":"11222333000166", "email": "Merc1@example.com" ,"celular": "99999999", "senha": "senha", "status": "activo"},
+        
+        ]
 
     @classmethod
     def get_users(cls):
@@ -15,31 +16,22 @@ class User:
             if user["id"] == user_id:
                 return user
         return None
-    
-    @classmethod
-    def store(cls, data):
 
-        new_user = {
-            "id": len(cls.users) + 1,
-            "name": data["name"],
-            "email": data["email"]
-        }
-        cls.users.append(new_user)        
-        return cls.users
-    
     @classmethod
-    def delete_user(cls, user_id):
-        for user in cls.users:
-            if user["id"] == user_id:
-                cls.users.remove(user) 
-                return True
-        return False 
-    
+    def create_user(cls, data):
+        new_id = max(user["id"] for user in cls.users) + 1 if cls.users else 1
+        new_user = {"id": new_id, "name": data["name"], "cnpj": data["cnpj"], "email": data["email"], "celular": data["celular"], "senha": data["senha"], "status": data["status"]}
+        cls.users.append(new_user)
+        return new_user
+
     @classmethod
     def update_user(cls, user_id, data):
         for user in cls.users:
             if user["id"] == user_id:
-                user["name"] = data.get("name", user["name"])
-                user["email"] = data.get("email", user["email"])
-                return user  
+                user.update(data)
+                return user
         return None
+
+    @classmethod
+    def delete_user(cls, user_id):
+        cls.users = [user for user in cls.users if user["id"] != user_id]
